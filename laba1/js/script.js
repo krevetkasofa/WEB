@@ -9,6 +9,10 @@ const cartList = document.getElementById('cart-list');
 const cartEmpty = document.getElementById('cart-empty');
 const cartTotal = document.getElementById('cart-total');
 const orderBtn = document.getElementById('order-btn');
+const orderDialog = document.getElementById('order-dialog');
+const orderForm = document.getElementById('order-form');
+const closeDialogBtn = document.getElementById('close-dialog');
+
 
 //  Функции 
 
@@ -110,7 +114,9 @@ function loadCart() {
 }
 
 
-// Обработчик
+// Обработчики событий
+
+// Кнопки Добавить в корзину
 addButtons.forEach(function (button) {
     button.addEventListener('click', function () {
         const id = button.dataset.id;
@@ -136,6 +142,28 @@ cartList.addEventListener('click', function (event) {
     } else if (action === 'remove') {
         removeFromCart(id);
     }
+});
+
+// Открыть форму заказа
+orderBtn.addEventListener('click', function () {
+    orderDialog.showModal();
+});
+
+// Закрыть форму по кнопке Отмена
+closeDialogBtn.addEventListener('click', function () {
+    orderDialog.close();
+});
+
+// Отправка формы заказа
+orderForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    alert('Заказ создан!');
+
+    cart = [];
+    renderCart();
+    orderForm.reset();
+    orderDialog.close();
 });
 
 // Первая отрисовка при загрузке страницы

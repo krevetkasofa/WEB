@@ -328,3 +328,55 @@ img {
     background-color: var(--color-accent);
     color: #fff;
 }
+
+/* Адаптивность */
+
+/* Небольшие ноутбуки и планшеты горизонтально */
+@media (max-width: 1024px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Планшеты вертикально */
+@media (max-width: 768px) {
+    .header {
+        padding: 16px 24px;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+        padding: 24px;
+    }
+
+    .cart {
+        position: static;
+    }
+}
+
+/* Телефоны */
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        gap: 8px;
+        padding: 16px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .main {
+        gap: 24px;
+        padding: 16px;
+    }
+
+    .products {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .modal {
+        padding: 24px;
+    }
+}

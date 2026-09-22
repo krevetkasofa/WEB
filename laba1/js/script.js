@@ -1,5 +1,7 @@
-// Данные 
-let cart = [];
+// Ключ
+const STORAGE_KEY = 'flower-shop-cart';
+
+let cart = loadCart();
 
 // Элементы
 const addButtons = document.querySelectorAll('.card__btn');
@@ -86,7 +88,27 @@ function renderCart() {
     cartTotal.textContent = getTotal();
     cartEmpty.hidden = cart.length > 0;
     orderBtn.disabled = cart.length === 0;
+    saveCart();
 }
+
+// Сохранить корзину в localStorage
+function saveCart() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+}
+
+// Загрузить корзину из localStorage
+function loadCart() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return [];
+
+    try {
+        return JSON.parse(saved);
+    } catch (error) {
+        return [];
+    }
+}
+
 
 // Обработчик
 addButtons.forEach(function (button) {

@@ -1,14 +1,39 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Магазин</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <h1>Мой магазин</h1>
 
-  <script src="js/script.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="logo">Мой магазин</h1>
+        <nav class="nav">
+            <a href="#catalog">Каталог</a>
+            <a href="#cart">Корзина</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section id="catalog" class="catalog">
+            <h2>Каталог</h2>
+            <!-- Здесь будут карточки товаров  -->
+        </section>
+
+        <aside id="cart" class="cart">
+            <h2>Корзина</h2>
+            <!-- Здесь будет содержимое корзины -->
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Мой магазин</p>
+    </footer>
+
+    <script src="js/script.js"></script>
 </body>
+
 </html>

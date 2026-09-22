@@ -1,17 +1,77 @@
-console.log('Скрипт подключён');
+// Данные 
+let cart = [];
 
-console.log('Скрипт подключён!');
-
-// Находим все кнопки добавить в корзину
+// Элементы
 const addButtons = document.querySelectorAll('.card__btn');
+const cartList = document.getElementById('cart-list');
+const cartEmpty = document.getElementById('cart-empty');
+const cartTotal = document.getElementById('cart-total');
+const orderBtn = document.getElementById('order-btn');
 
-// говорим кнопке, что делать при нажатии
+//  Функции 
+
+// Добавить товар в корзину
+function addToCart(id, name, price) {
+    const existing = cart.find(function (item) {
+        return item.id === id;
+    });
+
+    if (existing) {
+        existing.qty = existing.qty + 1;
+    } else {
+        cart.push({ id: id, name: name, price: price, qty: 1 });
+    }
+
+    renderCart();
+}
+
+// Посчитать общ сум 
+function getTotal() {
+    let total = 0;
+    cart.forEach(function (item) {
+        total = total + item.price * item.qty;
+    });
+    return total;
+}
+
+
+function renderCart() {
+    cartList.innerHTML = '';
+
+    cart.forEach(function (item) {
+        const li = document.createElement('li');
+        li.className = 'cart__item';
+        li.dataset.id = item.id;
+        li.innerHTML = `
+      <div class="cart__info">
+        <span class="cart__name">${item.name}</span>
+        <span class="cart__price">${item.price * item.qty} ₽</span>
+      </div>
+      <div class="cart__controls">
+        <button class="cart__qty-btn" type="button" data-action="decrease">−</button>
+        <span class="cart__qty">${item.qty}</span>
+        <button class="cart__qty-btn" type="button" data-action="increase">+</button>
+        <button class="cart__remove" type="button" data-action="remove">✕</button>
+      </div>
+    `;
+        cartList.appendChild(li);
+    });
+
+    cartTotal.textContent = getTotal();
+    cartEmpty.hidden = cart.length > 0;
+    orderBtn.disabled = cart.length === 0;
+}
+
+// Обработчик
 addButtons.forEach(function (button) {
     button.addEventListener('click', function () {
         const id = button.dataset.id;
         const name = button.dataset.name;
         const price = Number(button.dataset.price);
 
-        console.log('Нажали:', id, name, price);
+        addToCart(id, name, price);
     });
 });
+
+// Первая отрисовка при загрузке страницы
+renderCart();

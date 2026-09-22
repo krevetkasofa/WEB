@@ -86,13 +86,39 @@
 
         <aside id="cart" class="cart">
             <h2>Корзина</h2>
-            <!-- Здесь будет содержимое корзины -->
+            <p class="cart__empty" id="cart-empty">Корзина пуста</p>
+            <ul class="cart__list" id="cart-list"></ul>
+            <p class="cart__total">Итого: <span id="cart-total">0</span> ₽</p>
+            <button class="cart__order-btn" type="button" id="order-btn">Оформить заказ</button>
         </aside>
     </main>
 
     <footer class="footer">
         <p>© 2026 Мой магазин</p>
     </footer>
+
+    <dialog id="order-dialog" class="modal">
+        <form id="order-form" class="order-form">
+            <h2>Оформление заказа</h2>
+
+            <label for="first-name">Имя</label>
+            <input type="text" id="first-name" name="firstName" required>
+
+            <label for="last-name">Фамилия</label>
+            <input type="text" id="last-name" name="lastName" required>
+
+            <label for="address">Адрес доставки</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="phone">Контактный телефон</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <div class="order-form__buttons">
+                <button type="button" id="close-dialog">Отмена</button>
+                <button type="submit">Создать заказ</button>
+            </div>
+        </form>
+    </dialog>
 
     <script src="js/script.js"></script>
 </body>

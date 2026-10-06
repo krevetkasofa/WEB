@@ -229,6 +229,25 @@ body {
     font-size: 14px;
 }
 
+
+/* Перетаскивание */
+.task[draggable="true"] {
+    cursor: grab;
+}
+
+.task--dragging {
+    opacity: 0.4;
+}
+
+.task--drop-before {
+    box-shadow: inset 0 3px 0 var(--color-accent);
+}
+
+.task--drop-after {
+    box-shadow: inset 0 -3px 0 var(--color-accent);
+}
+
+
 /*  Подвал */
 .footer {
     padding: 24px;

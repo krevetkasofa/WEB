@@ -109,6 +109,8 @@ let tasks = loadTasks();
 
 let editingId = null;
 
+let draggedId = null; 
+
 //  Работа с задачами 
 
 // Сохранить задачи в localStorage
@@ -169,6 +171,7 @@ function createEditForm(task) {
 function createTaskItem(task) {
     const li = createEl('li', 'task');
     li.dataset.id = task.id;
+    li.draggable = sortSelect.value === 'manual' && task.id !== editingId;
 
     if (task.done) {
         li.classList.add('task--done');
@@ -329,6 +332,43 @@ function updateTask(id, title, date) {
     renderTasks();
 }
 
+function moveTask(fromId, toId, placeAfter) {
+  if (fromId === toId) return;
+
+  const fromIndex = tasks.findIndex(function (t) {
+    return t.id === fromId;
+  });
+  if (fromIndex === -1) return;
+
+
+  const movedTask = tasks.splice(fromIndex, 1)[0];
+
+
+  let toIndex = tasks.findIndex(function (t) {
+    return t.id === toId;
+  });
+
+  if (toIndex === -1) {
+    tasks.splice(fromIndex, 0, movedTask);
+    return;
+  }
+
+  if (placeAfter) {
+    toIndex = toIndex + 1;
+  }
+
+  tasks.splice(toIndex, 0, movedTask);
+  renderTasks();
+}
+
+function clearDropMarkers() {
+  const marked = taskList.querySelectorAll('.task--drop-before, .task--drop-after');
+
+  marked.forEach(function (el) {
+    el.classList.remove('task--drop-before', 'task--drop-after');
+  });
+}
+
 
 //  Обработчики событий 
 
@@ -399,5 +439,65 @@ taskList.addEventListener('keydown', function (event) {
 searchInput.addEventListener('input', renderTasks);
 filterSelect.addEventListener('change', renderTasks);
 sortSelect.addEventListener('change', renderTasks);
+
+//  Drag-and-drop 
+
+// Начали перетаскивать задачу
+taskList.addEventListener('dragstart', function (event) {
+  const li = event.target.closest('.task');
+  if (!li) return;
+
+  draggedId = li.dataset.id;
+  li.classList.add('task--dragging');
+
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', draggedId);
+});
+
+// Ведём задачу над списком
+taskList.addEventListener('dragover', function (event) {
+  if (!draggedId) return;
+
+  event.preventDefault();
+
+  const target = event.target.closest('.task');
+  clearDropMarkers();
+
+  if (!target || target.dataset.id === draggedId) return;
+
+  const rect = target.getBoundingClientRect();
+  const isAfter = event.clientY > rect.top + rect.height / 2;
+
+  target.classList.add(isAfter ? 'task--drop-after' : 'task--drop-before');
+});
+
+// Отпустили задачу
+taskList.addEventListener('drop', function (event) {
+  event.preventDefault();
+
+  const target = event.target.closest('.task');
+  const fromId = draggedId;
+
+  draggedId = null;
+
+  if (!target || !fromId) {
+    clearDropMarkers();
+    return;
+  }
+
+  const isAfter = target.classList.contains('task--drop-after');
+  clearDropMarkers();
+  moveTask(fromId, target.dataset.id, isAfter);
+});
+
+// Перетаскивание закончилось 
+taskList.addEventListener('dragend', function (event) {
+  const li = event.target.closest('.task');
+  if (li) li.classList.remove('task--dragging');
+
+  draggedId = null;
+  clearDropMarkers();
+});
+
 
 renderTasks();

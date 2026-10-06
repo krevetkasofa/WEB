@@ -259,3 +259,57 @@ body {
 .footer p {
     margin: 0;
 }
+
+
+/*  Адаптивность */
+
+/* Телефоны и узкие экраны */
+@media (max-width: 600px) {
+  .header {
+    padding: 20px 16px;
+  }
+
+  .header__title {
+    font-size: 26px;
+  }
+
+  .main {
+    gap: 16px;
+    padding: 16px 12px;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  /* Форма и панель управления */
+  .task-form,
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .task-form__title,
+  .controls__search {
+    grid-column: 1 / -1;
+  }
+
+  /* Задача*/
+  .task {
+    flex-wrap: wrap;
+  }
+
+  .task__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Форма редактирования */
+  .task__edit {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .task__edit-title,
+  .task__edit-date {
+    grid-column: 1 / -1;
+  }
+}

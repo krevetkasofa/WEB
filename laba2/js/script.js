@@ -103,12 +103,32 @@ footer.append(footerText);
 document.body.append(header, main, footer);
 
 //  Данные 
-let tasks = [];
+const STORAGE_KEY = 'todo-tasks';
+
+let tasks = loadTasks();
 
 let editingId = null;
 
 //  Работа с задачами 
 
+// Сохранить задачи в localStorage
+function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// Загрузить задачи из localStorage
+function loadTasks() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return [];
+
+    try {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        return [];
+    }
+}
 
 function formatDate(dateString) {
     const parts = dateString.split('-');
@@ -118,72 +138,72 @@ function formatDate(dateString) {
 
 // форму редактирования задачи
 function createEditForm(task) {
-  const form = createEl('form', 'task__edit');
+    const form = createEl('form', 'task__edit');
 
-  const titleField = createEl('input', 'input task__edit-title');
-  titleField.type = 'text';
-  titleField.name = 'title';
-  titleField.value = task.title;
-  titleField.required = true;
-  titleField.setAttribute('aria-label', 'Новое название задачи');
+    const titleField = createEl('input', 'input task__edit-title');
+    titleField.type = 'text';
+    titleField.name = 'title';
+    titleField.value = task.title;
+    titleField.required = true;
+    titleField.setAttribute('aria-label', 'Новое название задачи');
 
-  const dateField = createEl('input', 'input task__edit-date');
-  dateField.type = 'date';
-  dateField.name = 'date';
-  dateField.value = task.date;
-  dateField.required = true;
-  dateField.setAttribute('aria-label', 'Новая дата');
+    const dateField = createEl('input', 'input task__edit-date');
+    dateField.type = 'date';
+    dateField.name = 'date';
+    dateField.value = task.date;
+    dateField.required = true;
+    dateField.setAttribute('aria-label', 'Новая дата');
 
-  const saveButton = createEl('button', 'button button--primary', 'Сохранить');
-  saveButton.type = 'submit';
+    const saveButton = createEl('button', 'button button--primary', 'Сохранить');
+    saveButton.type = 'submit';
 
-  const cancelButton = createEl('button', 'button button--ghost', 'Отмена');
-  cancelButton.type = 'button';
-  cancelButton.dataset.action = 'cancel';
+    const cancelButton = createEl('button', 'button button--ghost', 'Отмена');
+    cancelButton.type = 'button';
+    cancelButton.dataset.action = 'cancel';
 
-  form.append(titleField, dateField, saveButton, cancelButton);
-  return form;
+    form.append(titleField, dateField, saveButton, cancelButton);
+    return form;
 }
 
 // Создать элемент списка для одной задачи
 function createTaskItem(task) {
-  const li = createEl('li', 'task');
-  li.dataset.id = task.id;
+    const li = createEl('li', 'task');
+    li.dataset.id = task.id;
 
-  if (task.done) {
-    li.classList.add('task--done');
-  }
+    if (task.done) {
+        li.classList.add('task--done');
+    }
 
-  const checkbox = createEl('input', 'task__checkbox');
-  checkbox.type = 'checkbox';
-  checkbox.checked = task.done;
-  checkbox.setAttribute('aria-label', 'Отметить как выполненную');
+    const checkbox = createEl('input', 'task__checkbox');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.done;
+    checkbox.setAttribute('aria-label', 'Отметить как выполненную');
 
 
-  if (task.id === editingId) {
-    li.append(checkbox, createEditForm(task));
+    if (task.id === editingId) {
+        li.append(checkbox, createEditForm(task));
+        return li;
+    }
+
+    const content = createEl('div', 'task__content');
+    const title = createEl('span', 'task__title', task.title);
+    const date = createEl('time', 'task__date', formatDate(task.date));
+    date.dateTime = task.date;
+    content.append(title, date);
+
+    const actions = createEl('div', 'task__actions');
+
+    const editButton = createEl('button', 'button button--ghost', 'Изменить');
+    editButton.type = 'button';
+    editButton.dataset.action = 'edit';
+
+    const deleteButton = createEl('button', 'button button--danger', 'Удалить');
+    deleteButton.type = 'button';
+    deleteButton.dataset.action = 'delete';
+
+    actions.append(editButton, deleteButton);
+    li.append(checkbox, content, actions);
     return li;
-  }
-
-  const content = createEl('div', 'task__content');
-  const title = createEl('span', 'task__title', task.title);
-  const date = createEl('time', 'task__date', formatDate(task.date));
-  date.dateTime = task.date;
-  content.append(title, date);
-
-  const actions = createEl('div', 'task__actions');
-
-  const editButton = createEl('button', 'button button--ghost', 'Изменить');
-  editButton.type = 'button';
-  editButton.dataset.action = 'edit';
-
-  const deleteButton = createEl('button', 'button button--danger', 'Удалить');
-  deleteButton.type = 'button';
-  deleteButton.dataset.action = 'delete';
-
-  actions.append(editButton, deleteButton);
-  li.append(checkbox, content, actions);
-  return li;
 }
 
 function renderTasks() {
@@ -194,6 +214,7 @@ function renderTasks() {
     });
 
     emptyMessage.hidden = tasks.length > 0;
+    saveTasks();
 }
 
 // Добавить новую задачу
@@ -233,31 +254,31 @@ function deleteTask(id) {
 
 // Начать редактирование задачи
 function startEdit(id) {
-  editingId = id;
-  renderTasks();
+    editingId = id;
+    renderTasks();
 
-  const field = taskList.querySelector('.task__edit-title');
-  if (field) field.focus();
+    const field = taskList.querySelector('.task__edit-title');
+    if (field) field.focus();
 }
 
 // Отменить редактирование
 function cancelEdit() {
-  editingId = null;
-  renderTasks();
+    editingId = null;
+    renderTasks();
 }
 
 // Сохранить изменения задачи
 function updateTask(id, title, date) {
-  const task = tasks.find(function (t) {
-    return t.id === id;
-  });
+    const task = tasks.find(function (t) {
+        return t.id === id;
+    });
 
-  if (!task) return;
+    if (!task) return;
 
-  task.title = title;
-  task.date = date;
-  editingId = null;
-  renderTasks();
+    task.title = title;
+    task.date = date;
+    editingId = null;
+    renderTasks();
 }
 
 
@@ -279,50 +300,50 @@ taskForm.addEventListener('submit', function (event) {
 
 // Флажок выполнено
 taskList.addEventListener('change', function (event) {
-  if (!event.target.classList.contains('task__checkbox')) return;
+    if (!event.target.classList.contains('task__checkbox')) return;
 
-  const id = event.target.closest('.task').dataset.id;
-  toggleTask(id);
+    const id = event.target.closest('.task').dataset.id;
+    toggleTask(id);
 });
 
 // Кнопки внутри задач
 taskList.addEventListener('click', function (event) {
-  const button = event.target.closest('button');
-  if (!button) return;
+    const button = event.target.closest('button');
+    if (!button) return;
 
-  const id = button.closest('.task').dataset.id;
-  const action = button.dataset.action;
+    const id = button.closest('.task').dataset.id;
+    const action = button.dataset.action;
 
-  if (action === 'delete') {
-    if (confirm('Удалить задачу?')) {
-      deleteTask(id);
+    if (action === 'delete') {
+        if (confirm('Удалить задачу?')) {
+            deleteTask(id);
+        }
+    } else if (action === 'edit') {
+        startEdit(id);
+    } else if (action === 'cancel') {
+        cancelEdit();
     }
-  } else if (action === 'edit') {
-    startEdit(id);
-  } else if (action === 'cancel') {
-    cancelEdit();
-  }
 });
 
 // Сохранение формы редактирования
 taskList.addEventListener('submit', function (event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const form = event.target;
-  const id = form.closest('.task').dataset.id;
-  const title = form.elements.title.value.trim();
-  const date = form.elements.date.value;
+    const form = event.target;
+    const id = form.closest('.task').dataset.id;
+    const title = form.elements.title.value.trim();
+    const date = form.elements.date.value;
 
-  if (!title) return;
+    if (!title) return;
 
-  updateTask(id, title, date);
+    updateTask(id, title, date);
 });
 
 // Отмена редактирования клавишей Esc
 taskList.addEventListener('keydown', function (event) {
-  if (event.key === 'Escape' && editingId) {
-    cancelEdit();
-  }
+    if (event.key === 'Escape' && editingId) {
+        cancelEdit();
+    }
 });
 
 

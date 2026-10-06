@@ -115,6 +115,8 @@ let editingId = null;
 
 let draggedId = null;
 
+let newTaskId = null;
+
 //  Работа с задачами 
 
 // Сохранить задачи в localStorage
@@ -179,6 +181,10 @@ function createTaskItem(task) {
 
     if (task.done) {
         li.classList.add('task--done');
+    }
+
+    if (task.id === newTaskId) {
+        li.classList.add('task--new');
     }
 
     const checkbox = createEl('input', 'task__checkbox');
@@ -259,6 +265,8 @@ function renderTasks() {
         taskList.append(createTaskItem(task));
     });
 
+    newTaskId = null;
+
     if (tasks.length === 0) {
         emptyMessage.textContent = 'Задач пока нет';
         emptyMessage.hidden = false;
@@ -282,6 +290,7 @@ function addTask(title, date) {
     };
 
     tasks.push(task);
+    newTaskId = task.id;
     renderTasks();
 }
 

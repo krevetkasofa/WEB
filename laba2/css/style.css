@@ -125,30 +125,76 @@ body {
 
 /*  Список задач */
 .task-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* Задача  */
 .task {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
-.task:last-child {
-    border-bottom: none;
+.task:hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.task--new {
+  animation: task-appear 0.35s ease-out;
+}
+
+@keyframes task-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .task__checkbox {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    accent-color: var(--color-accent);
-    cursor: pointer;
+  appearance: none;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 14px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.task__checkbox:hover {
+  transform: scale(1.1);
+}
+
+.task__checkbox:checked {
+  border-color: var(--color-success);
+  background-color: var(--color-success);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.task__checkbox:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .task__content {
@@ -200,9 +246,12 @@ body {
 
 
 .tasks__empty {
-    margin: 16px 0 0;
-    text-align: center;
-    color: var(--color-muted);
+  margin: 0;
+  padding: 32px 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: 14px;
+  text-align: center;
+  color: var(--color-muted);
 }
 
 
@@ -216,9 +265,6 @@ body {
     opacity: 0.6;
 }
 
-.task--done .task__checkbox {
-    accent-color: var(--color-success);
-}
 
 /* Форма редактирования */
 .task__edit {

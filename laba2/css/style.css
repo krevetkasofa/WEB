@@ -195,6 +195,21 @@ body {
     color: var(--color-muted);
 }
 
+
+/* Выполненная задача */
+.task--done .task__title {
+    text-decoration: line-through;
+    color: var(--color-muted);
+}
+
+.task--done .task__date {
+    opacity: 0.6;
+}
+
+.task--done .task__checkbox {
+    accent-color: var(--color-success);
+}
+
 /*  Подвал */
 .footer {
     padding: 24px;

@@ -117,6 +117,10 @@ function createTaskItem(task) {
     const li = createEl('li', 'task');
     li.dataset.id = task.id;
 
+    if (task.done) {
+        li.classList.add('task--done');
+    }
+
     const checkbox = createEl('input', 'task__checkbox');
     checkbox.type = 'checkbox';
     checkbox.checked = task.done;
@@ -166,6 +170,29 @@ function addTask(title, date) {
     renderTasks();
 }
 
+
+// Переключить статус задачи
+function toggleTask(id) {
+    const task = tasks.find(function (t) {
+        return t.id === id;
+    });
+
+    if (!task) return;
+
+    task.done = !task.done;
+    renderTasks();
+}
+
+// Удалить задачу
+function deleteTask(id) {
+    tasks = tasks.filter(function (t) {
+        return t.id !== id;
+    });
+
+    renderTasks();
+}
+
+
 //  Обработчики событий 
 
 // Отправка формы добавления задачи
@@ -179,5 +206,32 @@ taskForm.addEventListener('submit', function (event) {
     taskForm.reset();
     titleInput.focus();
 });
+
+
+
+// Флажок выполнено
+taskList.addEventListener('change', function (event) {
+  if (!event.target.classList.contains('task__checkbox')) return;
+
+  const id = event.target.closest('.task').dataset.id;
+  toggleTask(id);
+});
+
+// Кнопки внутри задач
+taskList.addEventListener('click', function (event) {
+  const button = event.target.closest('button');
+  if (!button) return;
+
+  const id = button.closest('.task').dataset.id;
+  const action = button.dataset.action;
+
+  if (action === 'delete') {
+    if (confirm('Удалить задачу?')) {
+      deleteTask(id);
+    }
+  }
+});
+
+
 
 renderTasks();

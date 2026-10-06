@@ -206,15 +206,63 @@ function createTaskItem(task) {
     return li;
 }
 
-function renderTasks() {
-    taskList.replaceChildren();
 
-    tasks.forEach(function (task) {
-        taskList.append(createTaskItem(task));
+// Получить задачи для показа с учётом поиска, фильтра и сортировки
+function getVisibleTasks() {
+  const query = searchInput.value.trim().toLowerCase();
+  const filter = filterSelect.value;
+  const sort = sortSelect.value;
+
+  const result = tasks.filter(function (task) {
+    // Поиск по названию
+    if (query && !task.title.toLowerCase().includes(query)) {
+      return false;
+    }
+
+    // Фильтр по статусу
+    if (filter === 'active' && task.done) return false;
+    if (filter === 'done' && !task.done) return false;
+
+    return true;
+  });
+
+  // Сортировка по дате
+  if (sort === 'date-asc') {
+    result.sort(function (a, b) {
+      return a.date.localeCompare(b.date);
     });
+  } else if (sort === 'date-desc') {
+    result.sort(function (a, b) {
+      return b.date.localeCompare(a.date);
+    });
+  }
 
-    emptyMessage.hidden = tasks.length > 0;
-    saveTasks();
+  return result;
+}
+
+
+
+// Нарисовать список задач
+function renderTasks() {
+  const visibleTasks = getVisibleTasks();
+
+  taskList.replaceChildren();
+
+  visibleTasks.forEach(function (task) {
+    taskList.append(createTaskItem(task));
+  });
+
+  if (tasks.length === 0) {
+    emptyMessage.textContent = 'Задач пока нет';
+    emptyMessage.hidden = false;
+  } else if (visibleTasks.length === 0) {
+    emptyMessage.textContent = 'Ничего не найдено';
+    emptyMessage.hidden = false;
+  } else {
+    emptyMessage.hidden = true;
+  }
+
+  saveTasks();
 }
 
 // Добавить новую задачу
@@ -346,5 +394,10 @@ taskList.addEventListener('keydown', function (event) {
     }
 });
 
+
+// Поиск, фильтр и сортировка
+searchInput.addEventListener('input', renderTasks);
+filterSelect.addEventListener('change', renderTasks);
+sortSelect.addEventListener('change', renderTasks);
 
 renderTasks();

@@ -210,6 +210,25 @@ body {
     accent-color: var(--color-success);
 }
 
+/* Форма редактирования */
+.task__edit {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 8px;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.task__edit .input {
+    min-width: 0;
+    padding: 6px 10px;
+}
+
+.task__edit .button {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
 /*  Подвал */
 .footer {
     padding: 24px;

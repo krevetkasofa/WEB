@@ -38,7 +38,7 @@ function createSelect(className, label, options) {
 
 //  Шапка 
 const header = createEl('header', 'header');
-const headerTitle = createEl('h1', 'header__title', 'Список дел');
+const headerTitle = createEl('h1', 'header__title', 'Мой список дел');
 header.append(headerTitle);
 
 //  Основная часть 
@@ -101,7 +101,7 @@ main.append(addSection, tasksSection);
 
 // Подвал 
 const footer = createEl('footer', 'footer');
-const footerText = createEl('p', '', '© 2026 Список дел');
+const footerText = createEl('p', '', '© 2026 Мой список дел');
 footer.append(footerText);
 
 document.body.append(header, main, footer);

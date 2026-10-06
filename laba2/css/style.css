@@ -120,6 +120,75 @@ body {
     list-style: none;
 }
 
+/* Задача  */
+.task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.task:last-child {
+    border-bottom: none;
+}
+
+.task__checkbox {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+}
+
+.task__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.task__title {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.task__date {
+    font-size: 14px;
+    color: var(--color-muted);
+}
+
+.task__actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.task__actions .button {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.button--ghost {
+    border: 1px solid var(--color-border);
+    background-color: transparent;
+    color: var(--color-accent);
+}
+
+.button--ghost:hover {
+    border-color: var(--color-accent);
+}
+
+.button--danger {
+    background-color: transparent;
+    color: var(--color-danger);
+}
+
+.button--danger:hover {
+    background-color: rgba(217, 83, 79, 0.1);
+}
+
+
 .tasks__empty {
     margin: 16px 0 0;
     text-align: center;

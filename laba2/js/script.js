@@ -101,3 +101,83 @@ const footerText = createEl('p', '', '© 2026 Список дел');
 footer.append(footerText);
 
 document.body.append(header, main, footer);
+
+//  Данные 
+let tasks = [];
+
+//  Работа с задачами 
+
+
+function formatDate(dateString) {
+    const parts = dateString.split('-');
+    return parts[2] + '.' + parts[1] + '.' + parts[0];
+}
+
+function createTaskItem(task) {
+    const li = createEl('li', 'task');
+    li.dataset.id = task.id;
+
+    const checkbox = createEl('input', 'task__checkbox');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.done;
+    checkbox.setAttribute('aria-label', 'Отметить как выполненную');
+
+    const content = createEl('div', 'task__content');
+    const title = createEl('span', 'task__title', task.title);
+    const date = createEl('time', 'task__date', formatDate(task.date));
+    date.dateTime = task.date;
+    content.append(title, date);
+
+    const actions = createEl('div', 'task__actions');
+
+    const editButton = createEl('button', 'button button--ghost', 'Изменить');
+    editButton.type = 'button';
+    editButton.dataset.action = 'edit';
+
+    const deleteButton = createEl('button', 'button button--danger', 'Удалить');
+    deleteButton.type = 'button';
+    deleteButton.dataset.action = 'delete';
+
+    actions.append(editButton, deleteButton);
+    li.append(checkbox, content, actions);
+    return li;
+}
+
+function renderTasks() {
+    taskList.replaceChildren();
+
+    tasks.forEach(function (task) {
+        taskList.append(createTaskItem(task));
+    });
+
+    emptyMessage.hidden = tasks.length > 0;
+}
+
+// Добавить новую задачу
+function addTask(title, date) {
+    const task = {
+        id: String(Date.now()),
+        title: title,
+        date: date,
+        done: false,
+    };
+
+    tasks.push(task);
+    renderTasks();
+}
+
+//  Обработчики событий 
+
+// Отправка формы добавления задачи
+taskForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const title = titleInput.value.trim();
+    if (!title) return;
+
+    addTask(title, dateInput.value);
+    taskForm.reset();
+    titleInput.focus();
+});
+
+renderTasks();

@@ -1,3 +1,139 @@
+/*  Базовые настройки */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --color-bg: #f4f5fb;
+    --color-surface: #ffffff;
+    --color-text: #22223b;
+    --color-muted: #7a7c99;
+    --color-accent: #5b5bd6;
+    --color-accent-dark: #4343b8;
+    --color-border: #e1e3f0;
+    --color-success: #3fa37a;
+    --color-danger: #d9534f;
+    --radius: 14px;
+    --shadow: 0 4px 16px rgba(34, 34, 59, 0.06);
+}
+
 body {
-    background-color: lavender;
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+/*  Шапка */
+.header {
+    padding: 24px 16px;
+    background-color: var(--color-accent);
+    color: #fff;
+    text-align: center;
+}
+
+.header__title {
+    margin: 0;
+    font-size: 32px;
+}
+
+/*  Основная часть  */
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+
+.panel {
+    padding: 24px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.panel__title {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* Поля ввода */
+.input {
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(91, 91, 214, 0.2);
+}
+
+/*  Кнопки  */
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button--primary {
+    background-color: var(--color-accent);
+    color: #fff;
+}
+
+.button--primary:hover {
+    background-color: var(--color-accent-dark);
+}
+
+/* Форма добавления */
+.task-form {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+}
+
+/*  Панель управления */
+.controls {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/*  Список задач */
+.task-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tasks__empty {
+    margin: 16px 0 0;
+    text-align: center;
+    color: var(--color-muted);
+}
+
+/*  Подвал */
+.footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-muted);
+}
+
+.footer p {
+    margin: 0;
 }
